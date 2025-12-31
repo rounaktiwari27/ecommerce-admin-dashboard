@@ -5,9 +5,9 @@ import DeleteButton from "@/components/DeleteButton";
 
 export default async function Products() {
   const cookieStore = cookies();
-  const adminCookie = cookieStore.get("admin");
+  const admin = cookieStore.get("admin");
 
-  if (!adminCookie || adminCookie.value !== "true") {
+  if (!admin || admin.value !== "true") {
     redirect("/login");
   }
 
