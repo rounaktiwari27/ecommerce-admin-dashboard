@@ -1,10 +1,9 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import ProductChart from "@/components/ProductChart";
 import { prisma } from "@/lib/prisma";
+import ProductChart from "@/components/ProductChart";
 
 export default async function Dashboard() {
-  
   const cookieStore = cookies();
   const admin = cookieStore.get("admin");
 
@@ -13,9 +12,7 @@ export default async function Dashboard() {
   }
 
   
-  const products = await prisma.product.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+  const products = await prisma.product.findMany();
 
   const totalProducts = products.length;
 
@@ -36,15 +33,9 @@ export default async function Dashboard() {
       <h1>Admin Dashboard</h1>
 
       <div style={{ marginBottom: "1rem" }}>
-        <p>
-          <strong>Total Products:</strong> {totalProducts}
-        </p>
-        <p>
-          <strong>Average Price:</strong> ₹{averagePrice}
-        </p>
-        <p>
-          <strong>Highest Price:</strong> ₹{highestPrice}
-        </p>
+        <p><strong>Total Products:</strong> {totalProducts}</p>
+        <p><strong>Average Price:</strong> ₹{averagePrice}</p>
+        <p><strong>Highest Price:</strong> ₹{highestPrice}</p>
       </div>
 
       <div style={{ marginBottom: "1.5rem" }}>
