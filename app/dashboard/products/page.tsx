@@ -1,15 +1,10 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import DeleteButton from "../../../components/DeleteButton";
-
-async function getProducts() {
-  const res = await fetch("http://localhost:3000/api/products", {
-    cache: "no-store",
-  });
-  return res.json();
-}
+import { prisma } from "@/lib/prisma";
+import DeleteButton from "@/components/DeleteButton";
 
 export default async function Products() {
+  
   const cookieStore = await cookies();
   const adminCookie = cookieStore.get("admin");
 
@@ -17,7 +12,10 @@ export default async function Products() {
     redirect("/login");
   }
 
-  const products = await getProducts();
+  
+  const products = await prisma.product.findMany({
+    orderBy: { createdAt: "desc" },
+  });
 
   return (
     <div style={{ maxWidth: "800px" }}>
@@ -29,7 +27,7 @@ export default async function Products() {
         <p>No products yet</p>
       ) : (
         <div style={{ marginTop: "1rem" }}>
-          {products.map((p: any) => (
+          {products.map((p) => (
             <div
               key={p.id}
               style={{

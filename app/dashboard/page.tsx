@@ -1,10 +1,16 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import ProductChart from "@/components/ProductChart";
+import dynamic from "next/dynamic";
+
+const ProductChart = dynamic(
+  () => import("@/components/ProductChart"),
+  { ssr: false }
+);
 
 export default async function Dashboard() {
-  const cookieStore = cookies();
+  
+  const cookieStore = await cookies();
   const admin = cookieStore.get("admin");
 
   if (!admin || admin.value !== "true") {
@@ -18,7 +24,7 @@ export default async function Dashboard() {
 
   const averagePrice =
     totalProducts === 0
-      ? 0
+      ? "0.00"
       : (
           products.reduce((sum, p) => sum + p.price, 0) / totalProducts
         ).toFixed(2);

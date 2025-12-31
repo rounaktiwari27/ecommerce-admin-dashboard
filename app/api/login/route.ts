@@ -16,10 +16,9 @@ export async function POST(req: Request) {
 
   response.cookies.set("admin", "true", {
     httpOnly: true,
-    secure: true,      
-    sameSite: "lax",   
-    path: "/",         
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
   });
-
   return response;
 }

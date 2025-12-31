@@ -6,7 +6,11 @@ import { useEffect, useState } from "react";
 export default function EditProduct() {
   const router = useRouter();
   const params = useParams();
-  const id = Number(params.id);
+
+  
+  const id = Array.isArray(params.id)
+    ? Number(params.id[0])
+    : Number(params.id);
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -16,27 +20,34 @@ export default function EditProduct() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // LOAD PRODUCT
+  //LOAD PRODUCT
   useEffect(() => {
+    if (!id) return;
+
     async function fetchProduct() {
-      const res = await fetch("/api/products");
-      const products = await res.json();
-      const product = products.find((p: any) => p.id === id);
+      try {
+        const res = await fetch("/api/products", { cache: "no-store" });
+        const products = await res.json();
 
-      if (!product) {
+        const product = products.find((p: any) => p.id === id);
+
+        if (!product) {
+          router.push("/dashboard/products");
+          return;
+        }
+
+        setName(product.name);
+        setPrice(product.price.toString());
+        setImageUrl(product.imageUrl ?? null);
+      } catch {
         router.push("/dashboard/products");
-        return;
       }
-
-      setName(product.name);
-      setPrice(product.price.toString());
-      setImageUrl(product.imageUrl);
     }
 
     fetchProduct();
   }, [id, router]);
 
-  // UPLOAD IMAGE (OPTIONAL)
+  // IMAGE UPLOAD (OPTIONAL)
   async function uploadImageIfNeeded() {
     if (!newImage) return imageUrl;
 
@@ -56,8 +67,13 @@ export default function EditProduct() {
     return data.url;
   }
 
-  //--------- UPDATE PRODUCT
+  //UPDATE PRODUCT
   async function handleSubmit() {
+    if (!name.trim() || !price) {
+      setError("Name and price are required");
+      return;
+    }
+
     setLoading(true);
     setError("");
 
@@ -69,9 +85,9 @@ export default function EditProduct() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id,
-          name,
+          name: name.trim(),
           price: Number(price),
-          imageUrl: finalImageUrl,
+          imageUrl: finalImageUrl ?? undefined,
         }),
       });
 
@@ -113,7 +129,7 @@ export default function EditProduct() {
         />
       </div>
 
-      {/*CURRENT IMAGE*/}
+      {/* CURRENT IMAGE */}
       {imageUrl && (
         <div style={{ marginTop: "1rem" }}>
           <p>Current Image</p>
@@ -126,7 +142,7 @@ export default function EditProduct() {
         </div>
       )}
 
-      {/*REPLACE IMAGE*/}
+      {/* REPLACE IMAGE */}
       <div style={{ marginTop: "1rem" }}>
         <label>Replace Image (optional)</label>
         <input
