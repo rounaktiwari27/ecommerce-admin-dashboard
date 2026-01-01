@@ -11,7 +11,13 @@ export default async function Dashboard() {
     redirect("/login");
   }
 
-  const products = await prisma.product.findMany();
+  const rawProducts = await prisma.product.findMany();
+
+    const products = rawProducts.map((p) => ({
+    id: p.id,
+    name: p.name,
+    price: Number(p.price), 
+  }));
 
   const totalProducts = products.length;
 
