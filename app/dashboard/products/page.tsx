@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import DeleteButton from "@/components/DeleteButton";
 
 export default async function Products() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const admin = cookieStore.get("admin");
 
   if (!admin || admin.value !== "true") {
