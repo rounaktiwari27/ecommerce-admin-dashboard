@@ -1,24 +1,16 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import dynamic from "next/dynamic";
 import Link from "next/link";
-
-
-const ProductChart = dynamic(
-  () => import("@/components/ProductChart"),
-  { ssr: false }
-);
+import ProductChartClient from "@/components/ProductChartClient";
 
 export default async function Dashboard() {
-  
   const admin = cookies().get("admin");
 
   if (!admin || admin.value !== "true") {
     redirect("/login");
   }
 
-  
   const products = await prisma.product.findMany();
 
   const totalProducts = products.length;
@@ -40,18 +32,11 @@ export default async function Dashboard() {
       <h1>Admin Dashboard</h1>
 
       <div style={{ marginBottom: "1rem" }}>
-        <p>
-          <strong>Total Products:</strong> {totalProducts}
-        </p>
-        <p>
-          <strong>Average Price:</strong> ₹{averagePrice}
-        </p>
-        <p>
-          <strong>Highest Price:</strong> ₹{highestPrice}
-        </p>
+        <p><strong>Total Products:</strong> {totalProducts}</p>
+        <p><strong>Average Price:</strong> ₹{averagePrice}</p>
+        <p><strong>Highest Price:</strong> ₹{highestPrice}</p>
       </div>
 
-      {/*disable prefetch */}
       <div style={{ marginBottom: "1.5rem" }}>
         <Link
           href="/dashboard/products"
@@ -75,7 +60,7 @@ export default async function Dashboard() {
           borderRadius: "8px",
         }}
       >
-        <ProductChart products={products} />
+        <ProductChartClient products={products} />
       </div>
     </div>
   );
