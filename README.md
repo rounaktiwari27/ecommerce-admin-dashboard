@@ -47,8 +47,8 @@ Charts: Chart.js or Recharts
 
 To access the dashboard, enter the following login information:
 
-Admin is the username.  
-Admin123 is the password.
+admin is the username.  
+admin123 is the password.
 
 These credentials are solely intended for demonstration.
 
@@ -63,9 +63,6 @@ These credentials are solely intended for demonstration.
 4. Launch the program in your web browser:
    http://localhost:3000
 
-##Dummy admin credentials
-   username - admin
-   password - admin123
 
 ## Deliverables
 
