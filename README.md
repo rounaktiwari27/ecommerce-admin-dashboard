@@ -63,6 +63,10 @@ These credentials are solely intended for demonstration.
 4. Launch the program in your web browser:
    http://localhost:3000
 
+##Dummy admin credentials
+   username - admin
+   password - admin123
+
 ## Deliverables
 
 The entire GitHub repository, including all source code
